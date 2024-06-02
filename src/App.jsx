@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import Todos from './components/Todos'; 
+import TodoForm from './components/TodoForm'
 import './App.css'
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
   const toggleCompleted = (todoId) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === todoId) {
-        todo.completed = !todo.completed
+        return { ...todo, completed: !todo.completed }
       }
       return todo
     })
@@ -36,19 +37,39 @@ function App() {
   }
 
   const deleteTodo = (id) => {
-    const updatedTodos = todos.filter((todo) => todo.id !== id);
-    setTodos(updatedTodos);
-  };
+    const updatedTodos = todos.filter((todo) => todo.id !== id)
+    setTodos(updatedTodos)
+  }
+
+  const addTodo = (todoTitle) => {
+    if (todoTitle === '') {
+      return
+    }
+
+    const newTodo = {
+      id: todos.length + 1,
+      title: todoTitle,
+      completed: false,
+    }
+
+    const updatedTodos = todos.concat(newTodo)
+    setTodos(updatedTodos)
+  }
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>My Todo List</h1>
-      <Todos todos={todos} toggleCompleted={toggleCompleted} deleteTodo={deleteTodo} />
+    <div style={appStyles.container}>
+      <h1 style={appStyles.title}>My Todo List</h1>
+      <TodoForm addTodo={addTodo} /> 
+      <Todos
+        todos={todos}
+        toggleCompleted={toggleCompleted}
+        deleteTodo={deleteTodo}
+      />
     </div>
-  );
-};
+  )
+}
 
-const styles = {
+const appStyles = {
   container: {
     textAlign: 'center',
     padding: '12px',
@@ -57,6 +78,5 @@ const styles = {
     fontSize: '36px',
   },
 }
-
 
 export default App
