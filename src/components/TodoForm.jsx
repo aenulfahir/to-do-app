@@ -7,7 +7,7 @@ const TodoForm = ({ addTodo, isDarkMode }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     addTodo(title);
-    setTitle(''); // Reset title-nya
+    setTitle('');
   };
 
   const handleChangeTitle = (event) => {
@@ -42,6 +42,11 @@ const TodoForm = ({ addTodo, isDarkMode }) => {
     },
   };
 
+  // Tentukan warna latar belakang tambahan untuk mode gelap
+  if (isDarkMode) {
+    formStyles.button.backgroundColor = '#444'; // Warna latar belakang tambahan
+  }
+
   return (
     <div style={formStyles.container}>
       <form onSubmit={handleSubmit}>
@@ -50,7 +55,7 @@ const TodoForm = ({ addTodo, isDarkMode }) => {
           placeholder="Add your Todo"
           style={formStyles.formInput}
           onChange={handleChangeTitle}
-          value={title} // Atur nilai dari input sesuai dengan state "title"
+          value={title}
         />
         <button type="submit" style={formStyles.button}>Add Todo</button>
       </form>
