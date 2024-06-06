@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
 import '../App.css';
 
-const Todos = ({ todos, toggleCompleted, deleteTodo, updateTodo, isDarkMode }) => {
+const Todos = ({ todos, toggleCompleted, deleteTodo, updateTodo, updateStatus, isDarkMode }) => {
   const [newTodoId, setNewTodoId] = useState(null);
   const [todosToDelete, setTodosToDelete] = useState([]);
 
@@ -47,6 +47,7 @@ const Todos = ({ todos, toggleCompleted, deleteTodo, updateTodo, isDarkMode }) =
             toggleCompleted={toggleCompleted}
             deleteTodo={() => handleDeleteTodo(todo)}
             updateTodo={updateTodo}
+            updateStatus={updateStatus}
             isDarkMode={isDarkMode}
           />
         </div>
