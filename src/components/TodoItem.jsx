@@ -2,15 +2,20 @@ import React, { useState } from 'react';
 import { FaEdit, FaSave, FaTrash } from 'react-icons/fa';
 import '../App.css';
 
-const TodoItem = ({ todo, toggleCompleted, deleteTodo, updateTodo, isDarkMode }) => {
+const TodoItem = ({ todo, toggleCompleted, deleteTodo, updateTodo, updateStatus, isDarkMode }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(todo.title);
+  const [newStatus, setNewStatus] = useState(todo.status);
 
   const getTodoTitleStyle = () => {
-    if (todo.completed) {
-      return { textDecoration: 'line-through', color: isDarkMode ? '#d3d3d3' : '#d3d3d3' };
-    } else {
-      return { textDecoration: 'none', color: isDarkMode ? '#f0f0f0' : '#333' };
+    switch (todo.status) {
+      case 'Complete':
+        return { textDecoration: 'line-through', color: '#28a745' };
+      case 'In Progress':
+        return { textDecoration: 'underline', color: '#ffc107' };
+      case 'Todo':
+      default:
+        return { textDecoration: 'none', color: isDarkMode ? '#f0f0f0' : '#333' };
     }
   };
 
@@ -20,6 +25,7 @@ const TodoItem = ({ todo, toggleCompleted, deleteTodo, updateTodo, isDarkMode })
 
   const handleSaveClick = () => {
     updateTodo(todo.id, newTitle);
+    updateStatus(todo.id, newStatus);
     setIsEditing(false);
   };
 
@@ -51,9 +57,21 @@ const TodoItem = ({ todo, toggleCompleted, deleteTodo, updateTodo, isDarkMode })
       borderBottom: `2px solid ${isDarkMode ? '#888' : '#ccc'}`,
       transition: 'background-color 0.3s, color 0.3s, border-bottom-color 0.3s',
     },
-    checkbox: {
-      height: '18px',
-      width: '18px',
+    select: {
+      flexGrow: 1,
+      fontSize: '16px',
+      padding: '5px',
+      marginLeft: '10px',
+      backgroundColor: isDarkMode ? '#666' : '#fff',
+      color: isDarkMode ? '#f0f0f0' : '#333',
+      border: 'none',
+      borderBottom: `2px solid ${isDarkMode ? '#888' : '#ccc'}`,
+      transition: 'background-color 0.3s, color 0.3s, border-bottom-color 0.3s',
+    },
+    statusBadge: {
+      fontWeight: 'bold',
+      padding: '5px 10px',
+      borderRadius: '5px',
     },
     iconButton: {
       backgroundColor: 'transparent',
@@ -73,23 +91,49 @@ const TodoItem = ({ todo, toggleCompleted, deleteTodo, updateTodo, isDarkMode })
     },
   };
 
+  const getStatusBadgeStyle = () => {
+    switch (todo.status) {
+      case 'Complete':
+        return { ...styles.statusBadge, backgroundColor: '#28a745', color: '#fff' };
+      case 'In Progress':
+        return { ...styles.statusBadge, backgroundColor: '#ffc107', color: '#333' };
+      case 'Todo':
+      default:
+        return { ...styles.statusBadge, backgroundColor: isDarkMode ? '#777' : '#ddd', color: isDarkMode ? '#f0f0f0' : '#333' };
+    }
+  };
+
   return (
     <div style={styles.todoItem}>
       <input
         type="checkbox"
         style={styles.checkbox}
         onChange={() => toggleCompleted(todo.id)}
-        checked={todo.completed}
+        checked={todo.status === 'Complete'}
       />
       {isEditing ? (
-        <input
-          type="text"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-          style={styles.input}
-        />
+        <>
+          <input
+            type="text"
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            style={styles.input}
+          />
+          <select
+            value={newStatus}
+            onChange={(e) => setNewStatus(e.target.value)}
+            style={styles.select}
+          >
+            <option value="Todo">Todo</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Complete">Complete</option>
+          </select>
+        </>
       ) : (
-        <p style={{ ...styles.todoTitle, ...getTodoTitleStyle() }}>{todo.title}</p>
+        <>
+          <p style={{ ...styles.todoTitle, ...getTodoTitleStyle() }}>{todo.title}</p>
+          <span style={getStatusBadgeStyle()}>{todo.status}</span>
+        </>
       )}
       {isEditing ? (
         <button style={{ ...styles.iconButton, ...styles.saveButton }} onClick={handleSaveClick}>

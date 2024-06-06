@@ -9,17 +9,17 @@ function App() {
     {
       id: 1,
       title: 'Finish Progate React Course',
-      completed: false,
+      status: 'Todo', // Add status
     },
     {
       id: 2,
       title: 'Have lunch with Guru Domba',
-      completed: false,
+      status: 'Todo', // Add status
     },
     {
       id: 3,
       title: 'Study React with Ninja Ken',
-      completed: false,
+      status: 'Todo', // Add status
     },
   ]);
 
@@ -29,7 +29,7 @@ function App() {
   const toggleCompleted = (todoId) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === todoId) {
-        return { ...todo, completed: !todo.completed };
+        return { ...todo, status: todo.status === 'Complete' ? 'Todo' : 'Complete' };
       }
       return todo;
     });
@@ -49,7 +49,7 @@ function App() {
     const newTodo = {
       id: todos.length + 1,
       title: todoTitle,
-      completed: false,
+      status: 'Todo', // Add status
     };
 
     const updatedTodos = todos.concat(newTodo);
@@ -61,6 +61,16 @@ function App() {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         return { ...todo, title: newTitle };
+      }
+      return todo;
+    });
+    setTodos(updatedTodos);
+  };
+
+  const updateStatus = (id, newStatus) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        return { ...todo, status: newStatus };
       }
       return todo;
     });
@@ -140,6 +150,7 @@ function App() {
           toggleCompleted={toggleCompleted}
           deleteTodo={deleteTodo}
           updateTodo={updateTodo}
+          updateStatus={updateStatus}
           newTodoId={newTodoId}
           isDarkMode={isDarkMode}
         />
